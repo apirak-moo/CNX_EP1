@@ -15,6 +15,17 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddControllers();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("SecurityPolicy", policy =>
+    {
+       policy.WithOrigins("http://localhost:3000")
+       .AllowAnyMethod()
+       .AllowAnyHeader()
+       .AllowCredentials(); 
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -23,6 +34,10 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
+
+app.UseCors("SecurityPolicy");
+
+app.UseStaticFiles();
 
 app.MapControllers();
 
