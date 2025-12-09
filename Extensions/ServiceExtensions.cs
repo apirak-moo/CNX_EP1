@@ -6,9 +6,16 @@ public static class ServiceExtensions
     
     public static IServiceCollection ConfigureApplicationServices(this IServiceCollection services)
     {
+
+        services.AddScoped<IToolRepo, ToolRepo>();
         services.AddScoped<IToolService, ToolService>();
+
+        services.AddScoped<ICategoryRepo, CategoryRepo>();
         services.AddScoped<ICategoryService, CategoryService>();
+
+        services.AddScoped<IPortfolioRepo, PortfolioRepo>();
         services.AddScoped<IPortfolioService, PortfolioService>();
+
         return services;
     }
 
