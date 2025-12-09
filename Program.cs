@@ -1,41 +1,25 @@
-using backend.Data;
-using Microsoft.EntityFrameworkCore;
-using Scalar.AspNetCore;
-
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped<IToolService, ToolService>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<IPortfolioService, PortfolioService>();
+builder.Services.ConfigureDatabase(builder.Configuration);
+builder.Services.ConfigureApplicationServices();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+// builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddControllers();
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("SecurityPolicy", policy =>
-    {
-       policy.WithOrigins("http://localhost:3000")
-       .AllowAnyMethod()
-       .AllowAnyHeader()
-       .AllowCredentials(); 
-    });
-});
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
-    app.MapScalarApiReference();
+    // app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
-
-app.UseCors("SecurityPolicy");
 
 app.UseStaticFiles();
 
